@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Form, Button, Navbar, Nav, Card } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import Home from './Pages/Home';
 import Profile from './Pages/Profile'
 import Personal from './Pages/Personal';
 import Team from './Pages/Team';
-import Box from '3box';
 
 export default class App extends Component {
 
@@ -27,10 +26,6 @@ export default class App extends Component {
     if (this.state.accounts) {
       // Now MetaMask's provider has been enabled, we can start working with 3Box
 
-      // TODO Add new updated auth methods to docs,
-      const box = await Box.openBox(this.state.accounts[0], window.ethereum);
-      const space = await box.openSpace("3Notes-test");
-      this.setState({ space });
     }
   }
   render() {
@@ -46,12 +41,11 @@ export default class App extends Component {
             {this.state.accounts && (
               <Nav fill style={{ width: "100%" }} >
                 <Nav.Item><Link to="/">Home</Link></Nav.Item>
-                {this.state.space && (
                   <>
                     <Nav.Item><Link to="/team">Team TODOs</Link></Nav.Item>
                     <Nav.Item><Link to="/personal">Personal TODOs</Link></Nav.Item>
                     <Nav.Item><Link to="/profile">Profile Update</Link></Nav.Item>
-                  </>)}
+                  </>
 
               </Nav>
             )}
@@ -66,25 +60,23 @@ export default class App extends Component {
             {(!this.state.needToAWeb3Browser && !this.state.accounts) && <h2 style={{ textAlign: "center" }}>Connect MetaMask🤝</h2>}
             {this.state.accounts && (
               <Switch>
-                {this.state.space && (
                   <>
                     <Route path="/personal">
-                      <Personal space={this.state.space} accounts={this.state.accounts}/>
+                      <Personal 
+                        accounts={this.state.accounts}/>
                     </Route>
                     <Route path="/team">
-                      <Team space={this.state.space} accounts={this.state.accounts} />
+                      <Team 
+                      accounts={this.state.accounts} />
                     </Route>
                     <Route path="/profile">
                       <Profile
-                        ethAddress={this.state.accounts[0]}
                       />
                     </Route>
                   </>)
-                }
                 <Route path="/">
                   <Home
                     ethAddress={this.state.accounts[0]}
-                    space={this.state.space}
                   />
                 </Route>
               </Switch>

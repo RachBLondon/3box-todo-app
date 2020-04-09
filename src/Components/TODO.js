@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
-import ProfileHover from 'profile-hover';
-
 
 export default class TODO extends Component {
 
@@ -34,7 +32,6 @@ export default class TODO extends Component {
                         onChange={this.props.toggleDone.bind(null, item)} />
             
                     <span role="img" onClick={isOwner ? this.props.deletePost.bind(null, item.id): ()=>(console.log)}>🗑</span>
-                    {item.postedBy && <ProfileHover address={item.postedBy} />}
                 </div>)
             })}
         </div>)
