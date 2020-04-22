@@ -77,7 +77,8 @@ export default class App extends Component {
                     </Route>
                     <Route path="/team">
                       <Team
-                        accounts={this.state.accounts} />
+                        accounts={this.state.accounts}
+                        space={this.state.space} />
                     </Route>
                     <Route path="/profile">
                       <Profile />
