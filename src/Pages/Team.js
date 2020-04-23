@@ -27,8 +27,8 @@ export default class Team extends Component {
       member.toLowerCase()
     ); //prevents capitalisation errors
     const spaceName = "todo-space";
-    const confidentialThreadName = "confidential-todoslfhjkklxzcxzcdf1lllddddggffkk";
-    const waitingRoomName = "waitingroomdfd1lllfffdggffkk";
+    const confidentialThreadName = "confidential-todos";
+    const waitingRoomName = "waitingroom";
     let teamThread; // we will set this later
     const isModerator =
       this.state.moderatorsAddress.toLowerCase() ===
