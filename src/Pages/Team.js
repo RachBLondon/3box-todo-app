@@ -27,8 +27,8 @@ export default class Team extends Component {
       member.toLowerCase()
     ); //prevents capitalisation errors
     const spaceName = "todo-space";
-    const confidentialThreadName = "confidential-todoslfhjkkl";
-    const waitingRoomName = "waitingroom";
+    const confidentialThreadName = "confidential-todoslfhjkklxzcxzcdf1lllddddggffkk";
+    const waitingRoomName = "waitingroomdfd1lllfffdggffkk";
     let teamThread; // we will set this later
     const isModerator =
       this.state.moderatorsAddress.toLowerCase() ===
@@ -58,7 +58,12 @@ export default class Team extends Component {
       );
       const waitingRoom = await this.props.space.joinThread(waitingRoomName);
       await this.props.space.public.set(waitingRoomName, waitingRoom.address);
+      this.setState({teamThread : confidentialThread})
       console.log("confidential thread and waiting room thread made");
+    }
+
+    if(!moderatorsSpace[confidentialThreadName] && !isModerator && isTeamMember){
+      this.setState({moderatorLoginToCreate : true})
     }
 
     if (moderatorsSpace[confidentialThreadName]) {
@@ -90,23 +95,26 @@ export default class Team extends Component {
               teamMembersAdded: mostRecent.added,
             });
             // TODO get posts
-            this.getPosts();
+            this.getPosts()
+            return
           }
           if (mostRecent.waitingRoom.includes(this.props.accounts[0])) {
-            this.setState({ moderatorWillAdd: true });
+            this.setState({ moderatorWillAdd: true })
+            return
           } else {
             // add user to waiting room in prep to be added to confidential thread
             console.log("adding user to waiting room");
             mostRecent.waitingRoom.push(this.props.accounts[0]);
             await waitingRoom.post(JSON.stringify(mostRecent));
-            this.setState({ moderatorWillAdd: true });
+            this.setState({ moderatorWillAdd: true })
+            return
           }
         }
 
         // where we will handle the logic of adding team members to the
         // waiting room and confidential thread
       }
-      
+
       // Add the moderator login here
       if (isModerator) {
         // moderator joins the confidential thread and adds users in waiting
@@ -195,16 +203,17 @@ export default class Team extends Component {
   };
 
   render() {
+    const isActiveMember =  !this.state.notAModOrTeam && !this.state.moderatorWillAdd && !this.state.moderatorLoginToCreate && this.state.teamThread
     return (
       <div>
         <h2>Team TODOs</h2>
         <p>Team Member</p>
         <div style={{ height: "10vh" }}>{/* Team Members Section */}</div>
-        <br />
-        <br />
         {/* {TODO Section} */}
-
-        {this.state.posts && (
+        {this.state.notAModOrTeam && <h1>You are not part of this team</h1>}
+        {this.state.moderatorLoginToCreate && <h1>Ask your moderator to login to start</h1>}
+        {this.state.moderatorWillAdd && <h1>Wait for your moderator to log in and add you</h1>}
+        {this.state.posts && isActiveMember && (
           <TODO
             posts={this.state.posts}
             deletePost={this.deletePost}
@@ -212,25 +221,31 @@ export default class Team extends Component {
             accounts={this.props.accounts}
           />
         )}
-        <ModalComponent
-          buttonText={"Add a ToDo"}
-          ModalHeader={"Add a Todo"}
-          ModalBodyText={"One more thing on the list."}
-          submitFunc={this.onSubmit}
-        >
-          <Container>
-            <Form>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>New Item</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={this.state.newTodo}
-                  onChange={(e) => this.setState({ newTodo: e.target.value })}
-                />
-              </Form.Group>
-            </Form>
-          </Container>
-        </ModalComponent>
+        { isActiveMember && (
+          <>
+            <ModalComponent
+              buttonText={"Add a ToDo"}
+              ModalHeader={"Add a Todo"}
+              ModalBodyText={"One more thing on the list."}
+              submitFunc={this.onSubmit}
+            >
+              <Container>
+                <Form>
+                  <Form.Group controlId="formBasicEmail">
+                    <Form.Label>New Item</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={this.state.newTodo}
+                      onChange={(e) =>
+                        this.setState({ newTodo: e.target.value })
+                      }
+                    />
+                  </Form.Group>
+                </Form>
+              </Container>
+            </ModalComponent>
+          </>
+        )}
       </div>
     );
   }
